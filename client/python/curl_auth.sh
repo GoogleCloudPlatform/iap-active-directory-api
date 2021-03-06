@@ -16,5 +16,5 @@
 
 url=$(for i in $@; do if [[ $i == http://* ]] || [[ $i == https://* ]]; then echo $i; exit; fi; done) # assume url is arg that starts with scheme
 
-curl -H "Authorization: Bearer $(./print-id-token.py "$url")" $@
+curl -H "Authorization: Bearer $(./print-id-token.py "$url")" "$@"
 
