@@ -62,7 +62,7 @@ Internally this project utilizes both python-ldap and ldap3. Because python-ldap
 ## **Usage**
 
 **Service endpoint:** The service endpoint is your 
-App Engine enpoint and API version such as ```https://{project}.uc.r.appspot.com/v0beta1```.\
+App Engine enpoint and API version such as ```https://{project}.uc.r.appspot.com/alpha```.\
 **Path parameters:**
 
 Parameter|Description
