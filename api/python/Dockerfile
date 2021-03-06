@@ -25,6 +25,9 @@ RUN apt-get install -y libsasl2-modules
 RUN apt-get install -y libsasl2-modules-gssapi-mit
 RUN apt-get install -y krb5-user
 
+# configure kerberos
+ADD krb5.conf /etc/krb5.conf
+
 # Create a virtualenv for dependencies. This isolates these packages from
 # system-level packages.
 # Use -p python3 or -p python3.7 to select python version. Default is version 2.
