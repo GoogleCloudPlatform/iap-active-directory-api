@@ -22,7 +22,7 @@ from helpers.ldap import RESULT_KEY_DN, RESULT_KEY_ATTRIBUTES
 from ldap import SCOPE_BASE, SCOPE_SUBTREE, SCOPE_ONELEVEL
 from ldap import NO_SUCH_OBJECT, INVALID_DN_SYNTAX, FILTER_ERROR, OBJECT_CLASS_VIOLATION, ALREADY_EXISTS, LDAPError
 
-bp = Blueprint('v0beta1', __name__, url_prefix='/v0beta1')
+bp = Blueprint('alpha', __name__, url_prefix='/alpha')
 
 MESSAGE_UNEXPECTED_RESULT_COUNT = 'operation expects singular result'
 

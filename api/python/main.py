@@ -22,8 +22,8 @@ import helpers.json
 app = Flask(__name__)
 app.json_encoder = helpers.json.CustomJSONEncoder
 
-from apis.v0beta1 import bp as v0beta1
-app.register_blueprint(v0beta1)
+from versions.alpha import bp as alpha
+app.register_blueprint(alpha)
 
 @app.before_request
 def validate_iap_authn():
