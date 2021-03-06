@@ -20,6 +20,7 @@ import helpers.iap
 import helpers.json
 
 app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 app.json_encoder = helpers.json.CustomJSONEncoder
 
 from versions.alpha import bp as alpha
