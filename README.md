@@ -303,7 +303,7 @@ HTTP Request: ```GET /connections/{name}/ldap/{base}```\
 Parameter|Description
 :---|:---
 ```name```|```string``` Name of the connection resource.
-```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DN=example,DN=com```.
+```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DC=example,DC=com```.
 
 **Query parameters:**
 
@@ -343,7 +343,7 @@ HTTP Request: ```GET /connections/{name}/ldap/{base}```\
 Parameter|Description
 :---|:---
 ```name```|```string``` Name of the connection resource.
-```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DN=example,DN=com```.
+```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DC=example,DC=com```.
 
 **Query parameters:**
 
@@ -383,7 +383,7 @@ HTTP Request: ```DELETE /connections/{name}/ldap/{base}```\
 Parameter|Description
 :---|:---
 ```name```|```string``` Name of the connection resource.
-```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DN=example,DN=com```.
+```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DC=example,DC=com```.
 
 **Query parameters:**
 
@@ -407,7 +407,7 @@ HTTP Request: ```POST /connections/{name}/ldap/{base}```\
 Parameter|Description
 :---|:---
 ```name```|```string``` Name of the connection resource.
-```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DN=example,DN=com```.
+```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DC=example,DC=com```.
 
 **Query parameters:**
 
@@ -464,7 +464,7 @@ HTTP Request: ```PUT /connections/{name}/ldap/{base}```\
 Parameter|Description
 :---|:---
 ```name```|```string``` Name of the connection resource.
-```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DN=example,DN=com```.
+```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DC=example,DC=com```.
 
 **Query parameters:**
 
@@ -523,7 +523,7 @@ HTTP Request: ```PATCH /connections/{name}/ldap/{base}```\
 Parameter|Description
 :---|:---
 ```name```|```string``` Name of the connection resource.
-```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DN=example,DN=com```.
+```base```|```string``` Base DN from which to initiate LDAP search. Example: ```DC=example,DC=com```.
 
 **Query parameters:**
 
