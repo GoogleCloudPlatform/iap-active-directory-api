@@ -19,6 +19,5 @@ export GOOGLE_CLOUD_PROJECT=$(gcloud config get-value core/project)
 export KMS_PROJECT=""
 export KMS_LOCATION="global"
 export KMS_KEYRING="active-directory-user-management-api"
-export KMS_KEY="domain-administrator-secrets"
-
+export KMS_KEY="ldap-bind-secrets"
 
