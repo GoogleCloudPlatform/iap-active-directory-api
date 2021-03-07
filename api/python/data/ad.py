@@ -105,7 +105,7 @@ def delete(connection, base, scope=None,  filter=None):
 
 def new_object_dn(container, attributes):
     ci = CaseInsensitiveDict(attributes)
-    object_classes = helpers.ad.format_attribute('objectClass', ci['objectClass'])
+    object_classes = [s.lower() for s in helpers.ad.format_attribute('objectClass', ci['objectClass'])]
     if 'organizationalunit' in object_classes:
         attr = 'ou'
     else:
