@@ -575,3 +575,161 @@ Field|Description
 ```attributes.name```|```string``` Attribute name.
 ```attributes.value```|```string``` or ```list``` single- or multi-valued attribute value.
 
+## **Examples**
+
+The following examples use ```curl_auth.sh``` as an example client. You can adapt these to your language of choice as long as your language can send/receive JSON data via HTTPS and you pass an appropriate bearer tokenin the ```Authorization``` header.
+
+### **Create a connection**
+
+As a first step, you might create a ```connection``` resource to hold parameters related to your connection to Active Directory. Note, the ```ldapUrl``` should point to a specific domain controller and the ```user``` includes the domain name in caps as a kerberos realm.
+
+```
+$ ./curl_auth.sh 'https://your-app-123456.uc.r.appspot.com/alpha/connections' -X POST -H "Content-Type: application/json" -d '{"name": "test-cnxn-1", "ldapUrl": "ldap://dc-1.example.com", "credentials": {"user":"user@EXAMPLE.COM", "password":"ChangeMe!"}}'
+```
+You should see output similar to the following:
+```
+{
+  "credentials": {
+    "password": "******",
+    "user": "user@EXAMPLE.COM"
+  },
+  "ldapUrl": "ldap://dc-1.example.com",
+  "name": "test-cnxn-1"
+}
+```
+
+### **Create a user**
+
+The following command will create a user using the Active Directory connection parameters defined in the previous step. Note that mutating operations (POST, PUT, PATCH, DELETE) to the ldap endpoint expect the combination of base DN and query parameters (scope, filter, etc.) to yield a singular result. In this example ```scope=base``` is provided to identify the base DN as the point of insertion for the new user.
+
+```
+$ ./curl_auth.sh 'https://your-app-123456.uc.r.appspot.com/alpha/connections/test-cnxn-1/ldap/cn=Users,dc=example,dc=com?scope=base' -X POST -H "Content-Type: application/json" -d '{"attributes":{"cn":"test-user","samAccountName":"test-user","unicodepwd":"ChangeMe!","userAccountControl":512,"objectClass":"user"}}'     
+```
+You should see output similar to the following:
+```
+[                                                                               
+  {                                                                             
+    "attributes": {                                                             
+      "accountExpires": "never",                                                
+      "badPasswordTime": "1601-01-01T00:00:00+00:00",      
+      "badPwdCount": 0,
+      "cn": "test-user",                                                        
+      "codePage": 0,                                                            
+      "countryCode": 0,                                                         
+      "dSCorePropagationData": [                                                
+        "1601-01-01T00:00:00+00:00"                                             
+      ],                                                                        
+      "distinguishedName": "CN=test-user,CN=Users,DC=example,DC=com",           
+      "instanceType": 4,                                                        
+      "lastLogoff": "1601-01-01T00:00:00+00:00",                                
+      "lastLogon": "1601-01-01T00:00:00+00:00",                                 
+      "logonCount": 0,                                                          
+      "name": "test-user",                                                      
+      "objectCategory": "CN=Person,CN=Schema,CN=Configuration,DC=example,DC=com",                                                                               
+      "objectClass": [                                                          
+        "top",                                                                  
+        "person", 
+        "organizationalPerson", 
+        "user"
+      ], 
+      "objectGUID": "{00b7ea38-db49-47e6-891c-51241a344bf5}", 
+      "objectSid": "S-1-5-21-2817136910-1814725959-1657134757-1106", 
+      "primaryGroupID": 513, 
+      "pwdLastSet": "2021-03-07T03:26:49.943209+00:00", 
+      "sAMAccountName": "test-user", 
+      "sAMAccountType": 805306368, 
+      "uSNChanged": 12950, 
+      "uSNCreated": 12948, 
+      "userAccountControl": 512, 
+      "whenChanged": "2021-03-07T03:26:49+00:00", 
+      "whenCreated": "2021-03-07T03:26:49+00:00"
+    }, 
+    "dn": "cn=test-user,cn=Users,dc=example,dc=com"
+  }
+]
+```
+
+### **Add user to group - step 1**
+
+You can add a user to a group by appending the DN of the user to the list of
+values stored with the group resource in the ```member``` multi-valued
+attribute. The example below shows how to query for the group by specifying the
+group's DN as the base DN of the ldap resource. Additionally the example shows
+how to narrow results by only returning the resource's ```member``` attribute.
+Other attributes could be added to the output by specfying a comma-delimtied
+list of attribute names.
+
+```
+$ ./curl_auth.sh 'https://your-app-123456.uc.r.appspot.com/alpha/connections/test-cnxn-1/ldap/cn=Domain%20Admins,cn=Users,dc=example,dc=com?attributes=member'
+```
+You should see output similar to the following:
+```
+[
+  {
+    "attributes": {
+      "member": [
+        "CN=Administrator,CN=Users,DC=example,DC=com"
+      ]
+    }, 
+    "dn": "CN=Domain Admins,CN=Users,DC=example,DC=com"
+  }
+]
+```
+
+### **Add user to group - step 2**
+To modify group members, the PATCH method is used to update only the
+```member``` attribute specifying the list retrieved in the previous step with
+the new group member appended to the end of the list.
+
+```
+$ ./curl_auth.sh 'https://your-app-123456.uc.r.appspot.com/alpha/connections/test-cnxn-1/ldap/cn=Domain%20Admins,cn=Users,dc=example,dc=com?attributes=member&scope=base' -X PATCH -H "Content-Type: application/json" -d '{"attributes":{"member":["cn=Administrator,cn=Users,dc=example,dc=com","cn=test-user,cn=Users,dc=example,dc=com"]}}'
+```
+You should see output similar to the following:
+```
+[
+  {
+    "attributes": {
+      "member": [
+        "CN=test-user,CN=Users,DC=example,DC=com", 
+        "CN=Administrator,CN=Users,DC=example,DC=com"
+      ]
+    }, 
+    "dn": "cn=Domain Admins,cn=Users,dc=example,dc=com"
+  }
+]
+```
+
+### **Rename a user**
+In this example, we use the PATCH operation to rename a user. The base DN
+selects the user and the new name is specified with the ```cn``` attribute.
+Notice that output is also limited to a list of attributes with a query
+parameter.
+
+```
+$ ./curl_auth.sh 'https://your-app-123456.uc.r.appspot.com/alpha/connections/test-cnxn-1/ldap/cn=test-user,cn=Users,dc=example,dc=com?attributes=cn,sAMAccountName' -X PATCH -H "Content-Type: application/json" -d '{"attributes":{"cn":"new-name"}}'
+```
+You should see output similar to the following:
+```
+[
+  {
+    "attributes": {
+      "cn": "new-name", 
+      "sAMAccountName": "test-user"
+    }, 
+    "dn": "cn=new-name,cn=Users,dc=example,dc=com"
+  }
+]
+```
+
+### **Delete a user**
+You can clean up by deleting this test user with its new DN and the DELETE
+method.
+
+```
+$ ./curl_auth.sh 'https://your-app-123456.uc.r.appspot.com/alpha/connections/test-cnxn-1/ldap/cn=new-name,cn=Users,dc=example,dc=com' -X DELETE
+```
+You should see output similar to the following:
+```
+{}
+```
+
