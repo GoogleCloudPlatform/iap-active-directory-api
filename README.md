@@ -1,4 +1,6 @@
-# ***THIS REPOSITORY IS NO LONGER BEING MAINTAINED***
+![status: inactive](https://img.shields.io/badge/status-inactive-red.svg)
+
+This project is no longer actively developed or maintained.
 
 # **Active Directory User Management API**
 
