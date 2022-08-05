@@ -1,3 +1,5 @@
+# ***THIS REPOSITORY IS NO LONGER BEING MAINTAINED***
+
 # **Active Directory User Management API**
 
 ## **Overview**
